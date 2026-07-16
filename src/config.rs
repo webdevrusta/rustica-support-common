@@ -69,18 +69,29 @@ lazy_static::lazy_static! {
     static ref ONLINE: Mutex<HashMap<String, i64>> = Default::default();
     pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new("".to_owned());
     pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = Default::default();
-    pub static ref APP_NAME: RwLock<String> = RwLock::new("RustDesk".to_owned());
+    pub static ref APP_NAME: RwLock<String> = RwLock::new("RusticaSupport".to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = RwLock::new(HashMap::from([
+        ("approve-mode".to_owned(), "click".to_owned()),
+        ("verification-method".to_owned(), "use-temporary-password".to_owned()),
+        ("allow-remote-config-modification".to_owned(), "N".to_owned()),
+        ("allow-deep-link-password".to_owned(), "N".to_owned()),
+        ("allow-deep-link-server-settings".to_owned(), "N".to_owned()),
+    ]));
     pub static ref DEFAULT_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref OVERWRITE_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref OVERWRITE_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref HARD_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = RwLock::new(HashMap::from([
+        ("disable-change-permanent-password".to_owned(), "Y".to_owned()),
+        ("hide-network-settings".to_owned(), "Y".to_owned()),
+        ("hide-proxy-settings".to_owned(), "Y".to_owned()),
+        ("hide-server-settings".to_owned(), "Y".to_owned()),
+    ]));
 }
 
 #[cfg(target_os = "android")]
@@ -117,8 +128,11 @@ const CHARS: &[char] = &[
     'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
-pub const RENDEZVOUS_SERVERS: &[&str] = &["rs-ny.rustdesk.com"];
-pub const RS_PUB_KEY: &str = "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=";
+// Rustica Support is pinned to the company-owned ID/relay server. Do not add
+// RustDesk's public rendezvous servers as a fallback: an outage should fail
+// closed instead of moving employee traffic outside Rustica infrastructure.
+pub const RENDEZVOUS_SERVERS: &[&str] = &["support.rusticaforge.com"];
+pub const RS_PUB_KEY: &str = "GhZ5AvdcRB5IO4bUZaALjbFDOam40mKbtSYIz2cImfU=";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;
