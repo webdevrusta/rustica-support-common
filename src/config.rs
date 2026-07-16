@@ -74,13 +74,24 @@ lazy_static::lazy_static! {
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = RwLock::new(HashMap::from([
+        ("approve-mode".to_owned(), "click".to_owned()),
+        ("verification-method".to_owned(), "use-temporary-password".to_owned()),
+        ("allow-remote-config-modification".to_owned(), "N".to_owned()),
+        ("allow-deep-link-password".to_owned(), "N".to_owned()),
+        ("allow-deep-link-server-settings".to_owned(), "N".to_owned()),
+    ]));
     pub static ref DEFAULT_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref OVERWRITE_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref OVERWRITE_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref HARD_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = RwLock::new(HashMap::from([
+        ("disable-change-permanent-password".to_owned(), "Y".to_owned()),
+        ("hide-network-settings".to_owned(), "Y".to_owned()),
+        ("hide-proxy-settings".to_owned(), "Y".to_owned()),
+        ("hide-server-settings".to_owned(), "Y".to_owned()),
+    ]));
 }
 
 #[cfg(target_os = "android")]
